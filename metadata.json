@@ -1,0 +1,7 @@
+{
+  "name": "MP Campaign Voice",
+  "description": "Mobilize followers to send emails to representatives with one click.",
+  "requestFramePermissions": [
+    "clipboard-read"
+  ]
+}
