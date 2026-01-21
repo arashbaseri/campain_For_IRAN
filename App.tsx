@@ -39,22 +39,21 @@ const App: React.FC = () => {
       { 
         id: 'ex-1', 
         name: 'Representative Arash', 
-        email: 'arash@example.com', 
-        subject: 'Campaign Support', 
-        body: 'Please support our cause for better infrastructure.' 
+        email: 'jimmie.akesson@riksdagen.se',  
+    
       },
             { 
         id: 'ex-2', 
         name: 'Representative Aras22h', 
         email: 'arash2@example2.com', 
-        subject: 'Campaign Support2', 
+        subject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran', 
         body: 'Dear MP, I am writing to you.' 
       },
             { 
         id: 'ex-3', 
         name: 'Representative Arash3', 
         email: 'arash3@example.com', 
-        subject: 'Campaign Support333', 
+        subject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran', 
         body: 'Dear MP, I am writing to you regarding...' 
       }
     ]
