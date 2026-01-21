@@ -14,14 +14,21 @@ import {
   Settings,
   ArrowLeft,
   Copy,
-  Sparkles
+  Sparkles,
+  Type,
+  FileText
 } from 'lucide-react';
 import { optimizeCampaignContent } from './services/geminiService';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewMode>('follower');
   const [copyFeedback, setCopyFeedback] = useState(false);
+  
+  // Feedback states for individual copy actions
   const [copyEmailId, setCopyEmailId] = useState<string | null>(null);
+  const [copySubjectId, setCopySubjectId] = useState<string | null>(null);
+  const [copyBodyId, setCopyBodyId] = useState<string | null>(null);
+  
   const [isOptimizing, setIsOptimizing] = useState<string | null>(null);
   
   const [campaign, setCampaign] = useState<CampaignData>({
@@ -61,10 +68,18 @@ const App: React.FC = () => {
     setTimeout(() => setCopyFeedback(false), 2000);
   };
 
-  const handleCopyEmail = (email: string, id: string) => {
-    navigator.clipboard.writeText(email.trim());
-    setCopyEmailId(id);
-    setTimeout(() => setCopyEmailId(null), 2000);
+  const handleCopyText = (text: string, id: string, type: 'email' | 'subject' | 'body') => {
+    navigator.clipboard.writeText(text.trim());
+    if (type === 'email') {
+      setCopyEmailId(id);
+      setTimeout(() => setCopyEmailId(null), 2000);
+    } else if (type === 'subject') {
+      setCopySubjectId(id);
+      setTimeout(() => setCopySubjectId(null), 2000);
+    } else if (type === 'body') {
+      setCopyBodyId(id);
+      setTimeout(() => setCopyBodyId(null), 2000);
+    }
   };
 
   const handleOptimize = async (mpId: string, currentBody: string) => {
@@ -103,45 +118,63 @@ const App: React.FC = () => {
             {campaign.title}
           </h1>
           <p className="text-gray-500 font-medium">
-            Send an email to your representative in one click.
+            Send an email directly or copy details for manual entry.
           </p>
         </header>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {campaign.mps.map((mp) => (
-            <div key={mp.id} className="relative group">
+            <div key={mp.id} className="bg-white rounded-3xl border-2 border-gray-100 shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-gray-200">
               <a 
                 href={generateMailto(mp)}
-                className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-500 hover:shadow-xl hover:-translate-y-0.5 transition-all group active:scale-[0.98]"
+                className="flex items-center justify-between p-6 hover:bg-blue-50/30 transition-colors group active:scale-[0.99]"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-gray-50 group-hover:bg-blue-50 rounded-xl flex items-center justify-center transition-colors">
-                    <Users className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
+                  <div className="w-12 h-12 bg-gray-50 group-hover:bg-blue-100 rounded-2xl flex items-center justify-center transition-colors">
+                    <Users className="w-6 h-6 text-gray-400 group-hover:text-blue-600" />
                   </div>
-                  <div className="pr-12">
+                  <div>
                     <h4 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 leading-tight">
                       {mp.name || 'Representative'}
                     </h4>
-                    <p className="text-xs text-gray-400 font-medium truncate max-w-[180px]">
+                    <p className="text-sm text-gray-400 font-medium mt-0.5">
                       {mp.email}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-blue-600 font-black text-sm uppercase tracking-widest shrink-0">
-                  Email <ChevronRight className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-widest shrink-0">
+                  Send Email <ChevronRight className="w-4 h-4" />
                 </div>
               </a>
-              
-              <button 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleCopyEmail(mp.email, mp.id);
-                }}
-                className="absolute right-20 top-1/2 -translate-y-1/2 p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
-                title="Copy email address"
-              >
-                {copyEmailId === mp.id ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-              </button>
+
+              {/* Quick Copy Toolbar */}
+              <div className="px-6 pb-6 pt-2 flex items-center gap-2 border-t border-gray-50">
+                <span className="text-[10px] font-black text-gray-300 uppercase tracking-tighter mr-2">Manual Copy:</span>
+                
+                <button 
+                  onClick={() => handleCopyText(mp.email, mp.id, 'email')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${copyEmailId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                >
+                  {copyEmailId === mp.id ? <CheckCircle className="w-3.5 h-3.5" /> : <Mail className="w-3.5 h-3.5" />}
+                  Email
+                </button>
+
+                <button 
+                  onClick={() => handleCopyText(mp.subject || campaign.globalSubject, mp.id, 'subject')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${copySubjectId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                >
+                  {copySubjectId === mp.id ? <CheckCircle className="w-3.5 h-3.5" /> : <Type className="w-3.5 h-3.5" />}
+                  Subject
+                </button>
+
+                <button 
+                  onClick={() => handleCopyText(mp.body || campaign.globalBody, mp.id, 'body')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${copyBodyId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                >
+                  {copyBodyId === mp.id ? <CheckCircle className="w-3.5 h-3.5" /> : <FileText className="w-3.5 h-3.5" />}
+                  Body
+                </button>
+              </div>
             </div>
           ))}
 
