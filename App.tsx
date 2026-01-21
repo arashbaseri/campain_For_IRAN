@@ -32,7 +32,7 @@ const App: React.FC = () => {
   const [isOptimizing, setIsOptimizing] = useState<string | null>(null);
   
   const [campaign, setCampaign] = useState<CampaignData>({
-    title: 'MP Campaign Action',
+    title: 'Campaign For a Free Iran',
     globalSubject: 'Urgent Action Required',
     globalBody: 'Dear MP, I am writing to you regarding...',
     mps: [
@@ -42,6 +42,20 @@ const App: React.FC = () => {
         email: 'arash@example.com', 
         subject: 'Campaign Support', 
         body: 'Please support our cause for better infrastructure.' 
+      },
+            { 
+        id: 'ex-2', 
+        name: 'Representative Aras22h', 
+        email: 'arash2@example2.com', 
+        subject: 'Campaign Support2', 
+        body: 'Dear MP, I am writing to you.' 
+      },
+            { 
+        id: 'ex-3', 
+        name: 'Representative Arash3', 
+        email: 'arash3@example.com', 
+        subject: 'Campaign Support333', 
+        body: 'Dear MP, I am writing to you regarding...' 
       }
     ]
   });
