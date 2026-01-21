@@ -33,29 +33,80 @@ const App: React.FC = () => {
   
   const [campaign, setCampaign] = useState<CampaignData>({
     title: 'Campaign For a Free Iran',
-    globalSubject: 'Urgent Action Required',
-    globalBody: 'Dear MP, I am writing to you regarding...',
+    globalSubject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran',
+    globalBody: `Hi,
+
+The Islamic Republic of Iran is committing systematic war crimes and crimes against humanity against its own unarmed and peaceful protesters who are demanding the most basic human rights.
+
+The IRGC has deliberately targeted civilians with military-grade and chemical weapons. Injured protesters have been executed at close range — including inside hospitals — and victims’ bodies have been confiscated and stolen to conceal evidence. These are not isolated incidents but an organized policy of repression.
+
+In addition, the regime has imported foreign terrorist militias, including Hashd al-Shaabi, Zeynabiyoun, and Fatemiyoun forces, to Iran to suppress civilians. The use of foreign proxy militias against a domestic population is a clear violation of international law and the Geneva Conventions.
+
+Iran has manifestly failed to protect its population and is actively perpetrating atrocities. Under international law, this meets the threshold for the Responsibility to Protect (R2P).
+
+We are calling for two immediate actions:
+ 1. The IRGC must be designated as a terrorist organization by the European Union.
+ 2. The Responsibility to Protect (R2P) must be activated for Iran.
+
+Any government committed to human dignity, international law, and accountability must act to prevent further atrocities.
+With the Best regards`,
     mps: [
       { 
         id: 'ex-1', 
-        name: 'Representative Arash', 
+        name: 'jimmie.akesson', 
         email: 'jimmie.akesson@riksdagen.se',  
     
       },
-            { 
+      { 
         id: 'ex-2', 
-        name: 'Representative Aras22h', 
-        email: 'arash2@example2.com', 
-        subject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran', 
-        body: 'Dear MP, I am writing to you.' 
+        name: 'ulf.kristersson', 
+        email: 'ulf.kristersson@gov.se', 
       },
-            { 
+      { 
         id: 'ex-3', 
-        name: 'Representative Arash3', 
-        email: 'arash3@example.com', 
-        subject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran', 
-        body: 'Dear MP, I am writing to you regarding...' 
+        name: 'cab-von', 
+        email: 'cab-von-der-leyen-contact@ec.europa.eu', 
+        //subject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran', 
+        //body: 'Dear MP, I am writing to you regarding...' 
       }
+      ,{ 
+        id: 'ex-4', 
+        name: 'magdalena.andersson', 
+        email: 'magdalena.andersson@riksdagen.se', 
+      }
+            ,{ 
+        id: 'ex-5', 
+        name: 'roberta.metsola', 
+        email: 'roberta.metsola@europarl.europa.eu', 
+      }
+            ,{ 
+        id: 'ex-6', 
+        name: 'michael.gahler', 
+        email: 'michael.gahler@europarl.europa.eu', 
+      }
+            ,{ 
+        id: 'ex-7', 
+        name: 'charlie.weimers', 
+        email: 'charlie.weimers@europarl.europa.eu', 
+      }
+            ,{ 
+        id: 'ex-8', 
+        name: 'raphael.glucksmann', 
+        email: 'raphael.glucksmann@europarl.europa.eu', 
+      }
+            ,{ 
+        id: 'ex-9', 
+        name: 'hannah.neumann', 
+        email: 'hannah.neumann@europarl.europa.eu', 
+      }
+            ,{ 
+        id: 'ex-10', 
+        name: 'petras.austrevicius', 
+        email: 'petras.austrevicius@europarl.europa.eu', 
+      }
+         
+
+      
     ]
   });
 
