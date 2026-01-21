@@ -16,7 +16,8 @@ import {
   Copy,
   Sparkles,
   Type,
-  FileText
+  FileText,
+  ExternalLink
 } from 'lucide-react';
 import { optimizeCampaignContent } from './services/geminiService';
 
@@ -51,62 +52,16 @@ We are calling for two immediate actions:
 Any government committed to human dignity, international law, and accountability must act to prevent further atrocities.
 With the Best regards`,
     mps: [
-      { 
-        id: 'ex-1', 
-        name: 'jimmie.akesson', 
-        email: 'jimmie.akesson@riksdagen.se',  
-    
-      },
-      { 
-        id: 'ex-2', 
-        name: 'ulf.kristersson', 
-        email: 'ulf.kristersson@gov.se', 
-      },
-      { 
-        id: 'ex-3', 
-        name: 'cab-von', 
-        email: 'cab-von-der-leyen-contact@ec.europa.eu', 
-        //subject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran', 
-        //body: 'Dear MP, I am writing to you regarding...' 
-      }
-      ,{ 
-        id: 'ex-4', 
-        name: 'magdalena.andersson', 
-        email: 'magdalena.andersson@riksdagen.se', 
-      }
-            ,{ 
-        id: 'ex-5', 
-        name: 'roberta.metsola', 
-        email: 'roberta.metsola@europarl.europa.eu', 
-      }
-            ,{ 
-        id: 'ex-6', 
-        name: 'michael.gahler', 
-        email: 'michael.gahler@europarl.europa.eu', 
-      }
-            ,{ 
-        id: 'ex-7', 
-        name: 'charlie.weimers', 
-        email: 'charlie.weimers@europarl.europa.eu', 
-      }
-            ,{ 
-        id: 'ex-8', 
-        name: 'raphael.glucksmann', 
-        email: 'raphael.glucksmann@europarl.europa.eu', 
-      }
-            ,{ 
-        id: 'ex-9', 
-        name: 'hannah.neumann', 
-        email: 'hannah.neumann@europarl.europa.eu', 
-      }
-            ,{ 
-        id: 'ex-10', 
-        name: 'petras.austrevicius', 
-        email: 'petras.austrevicius@europarl.europa.eu', 
-      }
-         
-
-      
+      { id: 'ex-1', name: 'All Primary Targets', email: 'jimmie.akesson@riksdagen.se;roberta.metsola@europarl.europa.eu;ulf.kristersson@gov.se;cab-von-der-leyen-contact@ec.europa.eu;magdalena.andersson@riksdagen.se;roberta.metsola@europarl.europa.eu;michael.gahler@europarl.europa.eu;charlie.weimers@europarl.europa.eu;raphael.glucksmann@europarl.europa.eu;hannah.neumann@europarl.europa.eu;petras.austrevicius@europarl.europa.eu' },
+      { id: 'ex-2', name: 'Ulf Kristersson', email: 'ulf.kristersson@gov.se' },
+      { id: 'ex-3', name: 'Ursula von der Leyen', email: 'cab-von-der-leyen-contact@ec.europa.eu' },
+      { id: 'ex-4', name: 'Magdalena Andersson', email: 'magdalena.andersson@riksdagen.se' },
+      { id: 'ex-5', name: 'Roberta Metsola', email: 'roberta.metsola@europarl.europa.eu' },
+      { id: 'ex-6', name: 'Michael Gahler', email: 'michael.gahler@europarl.europa.eu' },
+      { id: 'ex-7', name: 'Charlie Weimers', email: 'charlie.weimers@europarl.europa.eu' },
+      { id: 'ex-8', name: 'Raphaël Glucksmann', email: 'raphael.glucksmann@europarl.europa.eu' },
+      { id: 'ex-9', name: 'Hannah Neumann', email: 'hannah.neumann@europarl.europa.eu' },
+      { id: 'ex-10', name: 'Petras Auštrevičius', email: 'petras.austrevicius@europarl.europa.eu' }
     ]
   });
 
@@ -178,84 +133,88 @@ With the Best regards`,
           <div className="inline-flex items-center justify-center p-3 bg-blue-600 rounded-2xl text-white shadow-lg">
             <Zap className="w-8 h-8 fill-current" />
           </div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight leading-tight">
             {campaign.title}
           </h1>
-          <p className="text-gray-500 font-medium">
-            Send an email directly or copy details for manual entry.
+          <p className="text-gray-500 font-medium px-4">
+            Take action now. Click the buttons below to send or copy your message.
           </p>
         </header>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {campaign.mps.map((mp) => (
-            <div key={mp.id} className="bg-white rounded-3xl border-2 border-gray-100 shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-gray-200">
-              <a 
-                href={generateMailto(mp)}
-                className="flex items-center justify-between p-6 hover:bg-blue-50/30 transition-colors group active:scale-[0.99]"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-50 group-hover:bg-blue-100 rounded-2xl flex items-center justify-center transition-colors">
-                    <Users className="w-6 h-6 text-gray-400 group-hover:text-blue-600" />
+            <div key={mp.id} className="bg-white rounded-3xl border-2 border-gray-100 shadow-md hover:shadow-xl transition-all overflow-hidden flex flex-col">
+              {/* Card Content Top */}
+              <div className="p-6 pb-4">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shrink-0">
+                    <Users className="w-6 h-6" />
                   </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 leading-tight">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-bold text-gray-900 text-lg leading-tight truncate">
                       {mp.name || 'Representative'}
                     </h4>
-                    <p className="text-sm text-gray-400 font-medium mt-0.5">
+                    <p className="text-sm text-gray-400 font-medium truncate mt-1">
                       {mp.email}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-widest shrink-0">
-                  Send Email <ChevronRight className="w-4 h-4" />
+
+                {/* Manual Copy Toolbar */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Manual Copy Options:</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button 
+                      onClick={() => handleCopyText(mp.email, mp.id, 'email')}
+                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copyEmailId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                    >
+                      {copyEmailId === mp.id ? <CheckCircle className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
+                      Email
+                    </button>
+
+                    <button 
+                      onClick={() => handleCopyText(mp.subject || campaign.globalSubject, mp.id, 'subject')}
+                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copySubjectId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                    >
+                      {copySubjectId === mp.id ? <CheckCircle className="w-4 h-4" /> : <Type className="w-4 h-4" />}
+                      Subject
+                    </button>
+
+                    <button 
+                      onClick={() => handleCopyText(mp.body || campaign.globalBody, mp.id, 'body')}
+                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copyBodyId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                    >
+                      {copyBodyId === mp.id ? <CheckCircle className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                      Body
+                    </button>
+                  </div>
                 </div>
-              </a>
-
-              {/* Quick Copy Toolbar */}
-              <div className="px-6 pb-6 pt-2 flex items-center gap-2 border-t border-gray-50">
-                <span className="text-[10px] font-black text-gray-300 uppercase tracking-tighter mr-2">Manual Copy:</span>
-                
-                <button 
-                  onClick={() => handleCopyText(mp.email, mp.id, 'email')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${copyEmailId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
-                >
-                  {copyEmailId === mp.id ? <CheckCircle className="w-3.5 h-3.5" /> : <Mail className="w-3.5 h-3.5" />}
-                  Email
-                </button>
-
-                <button 
-                  onClick={() => handleCopyText(mp.subject || campaign.globalSubject, mp.id, 'subject')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${copySubjectId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
-                >
-                  {copySubjectId === mp.id ? <CheckCircle className="w-3.5 h-3.5" /> : <Type className="w-3.5 h-3.5" />}
-                  Subject
-                </button>
-
-                <button 
-                  onClick={() => handleCopyText(mp.body || campaign.globalBody, mp.id, 'body')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${copyBodyId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
-                >
-                  {copyBodyId === mp.id ? <CheckCircle className="w-3.5 h-3.5" /> : <FileText className="w-3.5 h-3.5" />}
-                  Body
-                </button>
               </div>
+
+              {/* Primary Action Button (The "Send Email" footer) */}
+              <a 
+                href={generateMailto(mp)}
+                className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-3 font-black text-sm uppercase tracking-widest transition-colors active:scale-[0.98]"
+              >
+                Send Email Action <ExternalLink className="w-4 h-4" />
+              </a>
             </div>
           ))}
 
           {campaign.mps.length === 0 && (
             <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-gray-100">
-              <p className="text-gray-400">Campaign has no targets.</p>
+              <p className="text-gray-400 font-medium">No campaign targets found.</p>
               <Button variant="ghost" className="mt-4" onClick={() => setView('builder')}>Configure Campaign</Button>
             </div>
           )}
         </div>
 
-        <div className="pt-8 flex justify-center">
+        <div className="pt-10 flex justify-center">
           <button 
             onClick={() => setView('builder')}
-            className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-blue-600 transition-colors uppercase tracking-widest"
+            className="flex items-center gap-2 text-[10px] font-black text-gray-400 hover:text-blue-600 transition-colors uppercase tracking-widest"
           >
-            <Settings className="w-4 h-4" /> Edit Campaign Settings
+            <Settings className="w-4 h-4" /> Campaign Dashboard
           </button>
         </div>
       </div>
@@ -271,51 +230,51 @@ With the Best regards`,
               <ArrowLeft className="w-6 h-6" />
             </button>
             <div>
-              <h1 className="text-2xl font-black text-gray-900">Campaign Editor</h1>
-              <p className="text-gray-500 text-sm">Design the experience for your followers.</p>
+              <h1 className="text-2xl font-black text-gray-900 leading-none">Campaign Builder</h1>
+              <p className="text-gray-500 text-sm mt-1">Design the experience for your followers.</p>
             </div>
           </div>
-          <Button variant="primary" onClick={handleCopyLink} className="shadow-lg shadow-blue-100">
-            {copyFeedback ? <CheckCircle className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+          <Button variant="primary" onClick={handleCopyLink} className="shadow-lg shadow-blue-100 py-3 px-6">
+            {copyFeedback ? <CheckCircle className="w-5 h-5" /> : <Share2 className="w-5 h-5" />}
             {copyFeedback ? 'Link Copied' : 'Share Campaign Link'}
           </Button>
         </header>
 
-        <div className="space-y-6">
-          <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
+        <div className="space-y-8">
+          <div className="bg-gray-50 p-6 md:p-8 rounded-[32px] border border-gray-100 space-y-4">
             <label className="text-xs font-black text-gray-400 uppercase tracking-widest block">Public Campaign Title</label>
             <input 
-              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-lg font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-4 text-xl font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm"
               value={campaign.title}
               onChange={(e) => setCampaign({ ...campaign, title: e.target.value })}
             />
           </div>
 
-          <section className="bg-white border-2 border-gray-50 p-8 rounded-[32px] space-y-6">
+          <section className="bg-white border-2 border-gray-50 p-6 md:p-10 rounded-[40px] space-y-8 shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold flex items-center gap-2 text-gray-800">
-                <Users className="w-5 h-5 text-blue-500" /> Target List
+              <h2 className="text-xl font-black flex items-center gap-3 text-gray-900">
+                <Users className="w-6 h-6 text-blue-500" /> Targets & Messages
               </h2>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-6">
               {campaign.mps.map((mp) => (
-                <div key={mp.id} className="bg-gray-50 p-6 rounded-2xl border border-gray-100 space-y-4 relative">
+                <div key={mp.id} className="bg-gray-50/50 p-6 md:p-8 rounded-3xl border border-gray-100 space-y-6 relative transition-all hover:bg-white hover:shadow-md">
                    <button 
                     onClick={() => {
                       const updated = campaign.mps.filter(m => m.id !== mp.id);
                       setCampaign({ ...campaign, mps: updated });
                     }}
-                    className="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors"
+                    className="absolute top-4 right-4 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Name / Title</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Representative Name</label>
                       <input 
-                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
                         value={mp.name}
                         onChange={(e) => {
                           const updated = campaign.mps.map(m => m.id === mp.id ? { ...m, name: e.target.value } : m);
@@ -324,9 +283,9 @@ With the Best regards`,
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Target Email</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Email Address (use ; for multiple)</label>
                       <input 
-                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         value={mp.email}
                         onChange={(e) => {
                           const updated = campaign.mps.map(m => m.id === mp.id ? { ...m, email: e.target.value } : m);
@@ -336,11 +295,11 @@ With the Best regards`,
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Subject Line</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Custom Subject Line</label>
                       <input 
-                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder={campaign.globalSubject}
                         value={mp.subject || ''}
                         onChange={(e) => {
@@ -350,19 +309,19 @@ With the Best regards`,
                       />
                     </div>
                     <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Message Body</label>
+                      <div className="flex items-center justify-between mb-1.5 ml-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Custom Email Body</label>
                         <button 
                           onClick={() => handleOptimize(mp.id, mp.body || '')}
                           disabled={!!isOptimizing}
-                          className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 disabled:opacity-50"
+                          className="text-[10px] font-black text-blue-600 hover:text-blue-700 flex items-center gap-1.5 disabled:opacity-50"
                         >
-                          {isOptimizing === mp.id ? <div className="animate-spin rounded-full h-2 w-2 border-b-2 border-blue-600"></div> : <Sparkles className="w-3 h-3" />}
+                          {isOptimizing === mp.id ? <div className="animate-spin rounded-full h-3 w-3 border-2 border-blue-600 border-t-transparent"></div> : <Sparkles className="w-3.5 h-3.5" />}
                           AI Optimize
                         </button>
                       </div>
                       <textarea 
-                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm h-24 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm h-32 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder={campaign.globalBody}
                         value={mp.body || ''}
                         onChange={(e) => {
@@ -374,11 +333,11 @@ With the Best regards`,
                   </div>
                 </div>
               ))}
-              <Button variant="secondary" className="w-full border-dashed py-4 rounded-2xl bg-white hover:bg-blue-50 hover:border-blue-200 transition-all" onClick={() => {
+              <Button variant="secondary" className="w-full border-dashed py-6 rounded-3xl bg-white hover:bg-blue-50 hover:border-blue-200 transition-all font-black text-xs uppercase tracking-[0.2em]" onClick={() => {
                 const newMP: MP = { id: Date.now().toString(), name: '', email: '', subject: '', body: '' };
                 setCampaign({ ...campaign, mps: [...campaign.mps, newMP] });
               }}>
-                <Plus className="w-4 h-4" /> Add Another MP / Target
+                <Plus className="w-5 h-5" /> Add Target Representative
               </Button>
             </div>
           </section>
