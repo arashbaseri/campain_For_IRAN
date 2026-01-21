@@ -34,10 +34,17 @@ const App: React.FC = () => {
       },
       { 
         id: 'ex-2', 
+        name: 'Representative reza', 
+        email: 'reza@bdsds.com', 
+        subject: 'campion', 
+        body: 'this is text bofy dsfsdfsdfsdfsdfsdfsdfsdf' 
+      },
+            { 
+        id: 'ex-2', 
         name: 'Representative Arasdh', 
         email: 'arasdh@bdsds.com', 
         subject: 'campion', 
-        body: 'this is text bofy dsfsdfsdfsdfsdfsdfsdfsdf' 
+        body: 'this reza' 
       }
     ]
   });
