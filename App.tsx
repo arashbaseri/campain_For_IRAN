@@ -12,12 +12,14 @@ import {
   CheckCircle, 
   Zap,
   Settings,
-  ArrowLeft
+  ArrowLeft,
+  Copy
 } from 'lucide-react';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewMode>('follower');
   const [copyFeedback, setCopyFeedback] = useState(false);
+  const [copyEmailId, setCopyEmailId] = useState<string | null>(null);
   
   // Seeding with your provided examples
   const [campaign, setCampaign] = useState<CampaignData>({
@@ -39,8 +41,8 @@ const App: React.FC = () => {
         subject: 'campion', 
         body: 'this is text bofy dsfsdfsdfsdfsdfsdfsdfsdf' 
       },
-            { 
-        id: 'ex-2', 
+      { 
+        id: 'ex-3', 
         name: 'Representative Arasdh', 
         email: 'arasdh@bdsds.com', 
         subject: 'campion', 
@@ -72,10 +74,20 @@ const App: React.FC = () => {
     setTimeout(() => setCopyFeedback(false), 2000);
   };
 
+  const handleCopyEmail = (email: string, id: string) => {
+    navigator.clipboard.writeText(email.trim());
+    setCopyEmailId(id);
+    setTimeout(() => setCopyEmailId(null), 2000);
+  };
+
   const generateMailto = (mp: MP) => {
-    const subject = encodeURIComponent(mp.subject || campaign.globalSubject);
-    const body = encodeURIComponent(mp.body || campaign.globalBody);
-    return `mailto:${mp.email}?subject=${subject}&body=${body}`;
+    // We trim everything to ensure Gmail doesn't get confused by hidden spaces
+    const recipient = mp.email.trim();
+    const subject = encodeURIComponent((mp.subject || campaign.globalSubject).trim());
+    const body = encodeURIComponent((mp.body || campaign.globalBody).trim());
+    
+    // Standard mailto format: mailto:email@domain.com?subject=...&body=...
+    return `mailto:${recipient}?subject=${subject}&body=${body}`;
   };
 
   const FollowerView = () => (
@@ -89,30 +101,47 @@ const App: React.FC = () => {
             {campaign.title}
           </h1>
           <p className="text-gray-500 font-medium">
-            Click a name below to open your email app with the pre-filled message.
+            Click a representative to open your email app.
           </p>
         </header>
 
         <div className="space-y-3">
           {campaign.mps.map((mp, i) => (
-            <a 
-              key={mp.id}
-              href={generateMailto(mp)}
-              className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-500 hover:shadow-xl hover:-translate-y-0.5 transition-all group active:scale-95"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-gray-50 group-hover:bg-blue-50 rounded-xl flex items-center justify-center transition-colors">
-                  <Users className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
+            <div key={mp.id} className="relative group">
+              <a 
+                href={generateMailto(mp)}
+                className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-500 hover:shadow-xl hover:-translate-y-0.5 transition-all group active:scale-[0.98]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-gray-50 group-hover:bg-blue-50 rounded-xl flex items-center justify-center transition-colors">
+                    <Users className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
+                  </div>
+                  <div className="pr-12">
+                    <h4 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 leading-tight">
+                      {mp.name || 'Representative'}
+                    </h4>
+                    <p className="text-xs text-gray-400 font-medium truncate max-w-[180px]">
+                      {mp.email}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 text-lg group-hover:text-blue-600">{mp.name || 'MP Name'}</h4>
-                  <p className="text-xs text-gray-400 font-medium">{mp.email}</p>
+                <div className="flex items-center gap-2 text-blue-600 font-black text-sm uppercase tracking-widest shrink-0">
+                  Send <ChevronRight className="w-4 h-4" />
                 </div>
-              </div>
-              <div className="flex items-center gap-2 text-blue-600 font-black text-sm uppercase tracking-widest">
-                Send <ChevronRight className="w-4 h-4" />
-              </div>
-            </a>
+              </a>
+              
+              {/* Fallback copy button in case mailto: fails on their device */}
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCopyEmail(mp.email, mp.id);
+                }}
+                title="Copy email address"
+                className="absolute right-20 top-1/2 -translate-y-1/2 p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
+              >
+                {copyEmailId === mp.id ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+              </button>
+            </div>
           ))}
 
           {campaign.mps.length === 0 && (
@@ -145,7 +174,7 @@ const App: React.FC = () => {
             </button>
             <div>
               <h1 className="text-2xl font-black text-gray-900">Configure Campaign</h1>
-              <p className="text-gray-500 text-sm">Update names, emails, and message text.</p>
+              <p className="text-gray-500 text-sm">Every MP can have a unique message.</p>
             </div>
           </div>
           <Button variant="primary" onClick={handleCopyLink}>
@@ -203,6 +232,7 @@ const App: React.FC = () => {
                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Unique Subject</label>
                       <input 
                         className="w-full bg-gray-50 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        placeholder={campaign.globalSubject}
                         value={mp.subject || ''}
                         onChange={(e) => {
                           const updated = campaign.mps.map(m => m.id === mp.id ? { ...m, subject: e.target.value } : m);
@@ -214,6 +244,7 @@ const App: React.FC = () => {
                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Unique Body Text</label>
                       <textarea 
                         className="w-full bg-gray-50 border-none rounded-lg px-3 py-2 text-sm h-20 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
+                        placeholder={campaign.globalBody}
                         value={mp.body || ''}
                         onChange={(e) => {
                           const updated = campaign.mps.map(m => m.id === mp.id ? { ...m, body: e.target.value } : m);
