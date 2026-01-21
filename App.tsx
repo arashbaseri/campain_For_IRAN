@@ -13,45 +13,32 @@ import {
   Zap,
   Settings,
   ArrowLeft,
-  Copy
+  Copy,
+  Sparkles
 } from 'lucide-react';
+import { optimizeCampaignContent } from './services/geminiService';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewMode>('follower');
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [copyEmailId, setCopyEmailId] = useState<string | null>(null);
+  const [isOptimizing, setIsOptimizing] = useState<string | null>(null);
   
-  // Seeding with your provided examples
   const [campaign, setCampaign] = useState<CampaignData>({
     title: 'MP Campaign Action',
-    globalSubject: 'Action Required',
-    globalBody: 'Please support our cause.',
+    globalSubject: 'Urgent Action Required',
+    globalBody: 'Dear MP, I am writing to you regarding...',
     mps: [
       { 
         id: 'ex-1', 
         name: 'Representative Arash', 
-        email: 'arash@b.com', 
-        subject: 'campion', 
-        body: 'this is text bofy gor send in preview' 
-      },
-      { 
-        id: 'ex-2', 
-        name: 'Representative reza', 
-        email: 'reza@bdsds.com', 
-        subject: 'campion', 
-        body: 'this is text bofy dsfsdfsdfsdfsdfsdfsdfsdf' 
-      },
-      { 
-        id: 'ex-3', 
-        name: 'Representative Arasdh', 
-        email: 'arasdh@bdsds.com', 
-        subject: 'campion', 
-        body: 'this reza' 
+        email: 'arash@example.com', 
+        subject: 'Campaign Support', 
+        body: 'Please support our cause for better infrastructure.' 
       }
     ]
   });
 
-  // Share Logic: Encodes campaign into URL hash
   useEffect(() => {
     const hash = window.location.hash;
     if (hash && hash.length > 1) {
@@ -80,14 +67,29 @@ const App: React.FC = () => {
     setTimeout(() => setCopyEmailId(null), 2000);
   };
 
+  const handleOptimize = async (mpId: string, currentBody: string) => {
+    setIsOptimizing(mpId);
+    try {
+      const optimized = await optimizeCampaignContent(currentBody || campaign.globalBody, 'professional');
+      const updatedMps = campaign.mps.map(m => m.id === mpId ? { ...m, body: optimized } : m);
+      setCampaign({ ...campaign, mps: updatedMps });
+    } catch (error) {
+      console.error("Optimization failed", error);
+    } finally {
+      setIsOptimizing(null);
+    }
+  };
+
   const generateMailto = (mp: MP) => {
-    // We trim everything to ensure Gmail doesn't get confused by hidden spaces
     const recipient = mp.email.trim();
-    const subject = encodeURIComponent((mp.subject || campaign.globalSubject).trim());
-    const body = encodeURIComponent((mp.body || campaign.globalBody).trim());
+    const subject = (mp.subject || campaign.globalSubject).trim();
+    const body = (mp.body || campaign.globalBody).trim();
     
-    // Standard mailto format: mailto:email@domain.com?subject=...&body=...
-    return `mailto:${recipient}?subject=${subject}&body=${body}`;
+    const params = new URLSearchParams();
+    params.append('subject', subject);
+    params.append('body', body);
+    
+    return `mailto:${recipient}?${params.toString().replace(/\+/g, '%20')}`;
   };
 
   const FollowerView = () => (
@@ -101,12 +103,12 @@ const App: React.FC = () => {
             {campaign.title}
           </h1>
           <p className="text-gray-500 font-medium">
-            Click a representative to open your email app.
+            Send an email to your representative in one click.
           </p>
         </header>
 
         <div className="space-y-3">
-          {campaign.mps.map((mp, i) => (
+          {campaign.mps.map((mp) => (
             <div key={mp.id} className="relative group">
               <a 
                 href={generateMailto(mp)}
@@ -126,18 +128,17 @@ const App: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-blue-600 font-black text-sm uppercase tracking-widest shrink-0">
-                  Send <ChevronRight className="w-4 h-4" />
+                  Email <ChevronRight className="w-4 h-4" />
                 </div>
               </a>
               
-              {/* Fallback copy button in case mailto: fails on their device */}
               <button 
                 onClick={(e) => {
                   e.preventDefault();
                   handleCopyEmail(mp.email, mp.id);
                 }}
-                title="Copy email address"
                 className="absolute right-20 top-1/2 -translate-y-1/2 p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
+                title="Copy email address"
               >
                 {copyEmailId === mp.id ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
               </button>
@@ -146,8 +147,8 @@ const App: React.FC = () => {
 
           {campaign.mps.length === 0 && (
             <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-gray-100">
-              <p className="text-gray-400">No Magic Links found.</p>
-              <Button variant="ghost" className="mt-4" onClick={() => setView('builder')}>Create One</Button>
+              <p className="text-gray-400">Campaign has no targets.</p>
+              <Button variant="ghost" className="mt-4" onClick={() => setView('builder')}>Configure Campaign</Button>
             </div>
           )}
         </div>
@@ -157,7 +158,7 @@ const App: React.FC = () => {
             onClick={() => setView('builder')}
             className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-blue-600 transition-colors uppercase tracking-widest"
           >
-            <Settings className="w-4 h-4" /> Campaign Settings
+            <Settings className="w-4 h-4" /> Edit Campaign Settings
           </button>
         </div>
       </div>
@@ -173,40 +174,51 @@ const App: React.FC = () => {
               <ArrowLeft className="w-6 h-6" />
             </button>
             <div>
-              <h1 className="text-2xl font-black text-gray-900">Configure Campaign</h1>
-              <p className="text-gray-500 text-sm">Every MP can have a unique message.</p>
+              <h1 className="text-2xl font-black text-gray-900">Campaign Editor</h1>
+              <p className="text-gray-500 text-sm">Design the experience for your followers.</p>
             </div>
           </div>
-          <Button variant="primary" onClick={handleCopyLink}>
+          <Button variant="primary" onClick={handleCopyLink} className="shadow-lg shadow-blue-100">
             {copyFeedback ? <CheckCircle className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-            {copyFeedback ? 'Link Copied!' : 'Copy Shareable Link'}
+            {copyFeedback ? 'Link Copied' : 'Share Campaign Link'}
           </Button>
         </header>
 
-        <div className="grid grid-cols-1 gap-8">
-          <section className="bg-gray-50 p-8 rounded-[32px] border border-gray-100 space-y-6">
-            <h2 className="text-lg font-bold flex items-center gap-2 text-gray-800">
-              <Mail className="w-5 h-5 text-blue-500" /> Target List
-            </h2>
+        <div className="space-y-6">
+          <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
+            <label className="text-xs font-black text-gray-400 uppercase tracking-widest block">Public Campaign Title</label>
+            <input 
+              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-lg font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              value={campaign.title}
+              onChange={(e) => setCampaign({ ...campaign, title: e.target.value })}
+            />
+          </div>
+
+          <section className="bg-white border-2 border-gray-50 p-8 rounded-[32px] space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold flex items-center gap-2 text-gray-800">
+                <Users className="w-5 h-5 text-blue-500" /> Target List
+              </h2>
+            </div>
             
             <div className="space-y-4">
-              {campaign.mps.map((mp, idx) => (
-                <div key={mp.id} className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4 relative group">
+              {campaign.mps.map((mp) => (
+                <div key={mp.id} className="bg-gray-50 p-6 rounded-2xl border border-gray-100 space-y-4 relative">
                    <button 
                     onClick={() => {
                       const updated = campaign.mps.filter(m => m.id !== mp.id);
                       setCampaign({ ...campaign, mps: updated });
                     }}
-                    className="absolute top-4 right-4 text-gray-300 hover:text-red-500"
+                    className="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Name</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Name / Title</label>
                       <input 
-                        className="w-full bg-gray-50 border-none rounded-lg px-3 py-2 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
                         value={mp.name}
                         onChange={(e) => {
                           const updated = campaign.mps.map(m => m.id === mp.id ? { ...m, name: e.target.value } : m);
@@ -215,9 +227,9 @@ const App: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Email</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Target Email</label>
                       <input 
-                        className="w-full bg-gray-50 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         value={mp.email}
                         onChange={(e) => {
                           const updated = campaign.mps.map(m => m.id === mp.id ? { ...m, email: e.target.value } : m);
@@ -229,9 +241,9 @@ const App: React.FC = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Unique Subject</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Subject Line</label>
                       <input 
-                        className="w-full bg-gray-50 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder={campaign.globalSubject}
                         value={mp.subject || ''}
                         onChange={(e) => {
@@ -241,9 +253,19 @@ const App: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Unique Body Text</label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Message Body</label>
+                        <button 
+                          onClick={() => handleOptimize(mp.id, mp.body || '')}
+                          disabled={!!isOptimizing}
+                          className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 disabled:opacity-50"
+                        >
+                          {isOptimizing === mp.id ? <div className="animate-spin rounded-full h-2 w-2 border-b-2 border-blue-600"></div> : <Sparkles className="w-3 h-3" />}
+                          AI Optimize
+                        </button>
+                      </div>
                       <textarea 
-                        className="w-full bg-gray-50 border-none rounded-lg px-3 py-2 text-sm h-20 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm h-24 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder={campaign.globalBody}
                         value={mp.body || ''}
                         onChange={(e) => {
@@ -255,11 +277,11 @@ const App: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <Button variant="secondary" className="w-full border-dashed py-4 rounded-2xl" onClick={() => {
+              <Button variant="secondary" className="w-full border-dashed py-4 rounded-2xl bg-white hover:bg-blue-50 hover:border-blue-200 transition-all" onClick={() => {
                 const newMP: MP = { id: Date.now().toString(), name: '', email: '', subject: '', body: '' };
                 setCampaign({ ...campaign, mps: [...campaign.mps, newMP] });
               }}>
-                <Plus className="w-4 h-4" /> Add New Magic Link Target
+                <Plus className="w-4 h-4" /> Add Another MP / Target
               </Button>
             </div>
           </section>
