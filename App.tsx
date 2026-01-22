@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MP, CampaignData, ViewMode } from './types';
 import { Button } from './components/Button';
@@ -53,16 +52,6 @@ Any government committed to human dignity, international law, and accountability
 With the Best regards`,
     mps: [
       { id: 'ex-1', name: 'All Primary Targets', email: 'roberta.metsola@europarl.europa.eu;michael.gahler@europarl.europa.eu;charlie.weimers@europarl.europa.eu;raphael.glucksmann@europarl.europa.eu;hannah.neumann@europarl.europa.eu;petras.austrevicius@europarl.europa.eu' }
-      // ,
-      //{ id: 'ex-2', name: 'Ulf Kristersson', email: 'ulf.kristersson@gov.se' },
-      //{ id: 'ex-3', name: 'Ursula von der Leyen', email: 'cab-von-der-leyen-contact@ec.europa.eu' },
-      //{ id: 'ex-4', name: 'Magdalena Andersson', email: 'magdalena.andersson@riksdagen.se' },
-      //{ id: 'ex-5', name: 'Roberta Metsola', email: 'roberta.metsola@europarl.europa.eu' },
-      //{ id: 'ex-6', name: 'Michael Gahler', email: 'michael.gahler@europarl.europa.eu' },
-      //{ id: 'ex-7', name: 'Charlie Weimers', email: 'charlie.weimers@europarl.europa.eu' },
-      //{ id: 'ex-8', name: 'Raphaël Glucksmann', email: 'raphael.glucksmann@europarl.europa.eu' },
-      //{ id: 'ex-9', name: 'Hannah Neumann', email: 'hannah.neumann@europarl.europa.eu' },
-      //{ id: 'ex-10', name: 'Petras Auštrevičius', email: 'petras.austrevicius@europarl.europa.eu' }
     ]
   });
 
@@ -116,7 +105,9 @@ With the Best regards`,
   };
 
   const generateMailto = (mp: MP) => {
-    const recipient = mp.email.trim();
+    // Standardize the email separator to comma (,) which is the RFC standard for multiple recipients.
+    // We replace semicolons and remove extra spaces.
+    const recipient = mp.email.replace(/;/g, ',').replace(/\s+/g, '').trim();
     const subject = (mp.subject || campaign.globalSubject).trim();
     const body = (mp.body || campaign.globalBody).trim();
     
@@ -143,64 +134,77 @@ With the Best regards`,
         </header>
 
         <div className="space-y-6">
-          {campaign.mps.map((mp) => (
-            <div key={mp.id} className="bg-white rounded-3xl border-2 border-gray-100 shadow-md hover:shadow-xl transition-all overflow-hidden flex flex-col">
-              {/* Card Content Top */}
-              <div className="p-6 pb-4">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shrink-0">
-                    <Users className="w-6 h-6" />
+          {campaign.mps.map((mp) => {
+            const isGroup = mp.email.includes(';') || mp.email.includes(',');
+            return (
+              <div key={mp.id} className="bg-white rounded-3xl border-2 border-gray-100 shadow-md hover:shadow-xl transition-all overflow-hidden flex flex-col">
+                {/* Card Content Top */}
+                <div className="p-6 pb-4">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shrink-0">
+                      <Users className="w-6 h-6" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-bold text-gray-900 text-lg leading-tight truncate">
+                          {mp.name || 'Representative'}
+                        </h4>
+                        {isGroup && (
+                          <span className="bg-blue-100 text-blue-700 text-[10px] font-black uppercase px-2 py-0.5 rounded-full tracking-tighter">
+                            Group
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-400 font-medium truncate mt-1">
+                        {mp.email.split(/[;,]/)[0]}{mp.email.split(/[;,]/).length > 1 ? ` + ${mp.email.split(/[;,]/).length - 1} more` : ''}
+                      </p>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-bold text-gray-900 text-lg leading-tight truncate">
-                      {mp.name || 'Representative'}
-                    </h4>
-                    <p className="text-sm text-gray-400 font-medium truncate mt-1">
-                      {mp.email}
-                    </p>
+
+                  {/* Manual Copy Toolbar */}
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Manual Copy Options:</span>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button 
+                        onClick={() => handleCopyText(mp.email, mp.id, 'email')}
+                        className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copyEmailId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                        title="Copy all email addresses"
+                      >
+                        {copyEmailId === mp.id ? <CheckCircle className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
+                        Emails
+                      </button>
+
+                      <button 
+                        onClick={() => handleCopyText(mp.subject || campaign.globalSubject, mp.id, 'subject')}
+                        className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copySubjectId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                        title="Copy subject line"
+                      >
+                        {copySubjectId === mp.id ? <CheckCircle className="w-4 h-4" /> : <Type className="w-4 h-4" />}
+                        Subject
+                      </button>
+
+                      <button 
+                        onClick={() => handleCopyText(mp.body || campaign.globalBody, mp.id, 'body')}
+                        className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copyBodyId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
+                        title="Copy email body"
+                      >
+                        {copyBodyId === mp.id ? <CheckCircle className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                        Body
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Manual Copy Toolbar */}
-                <div className="space-y-2">
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Manual Copy Options:</span>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button 
-                      onClick={() => handleCopyText(mp.email, mp.id, 'email')}
-                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copyEmailId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
-                    >
-                      {copyEmailId === mp.id ? <CheckCircle className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
-                      Email
-                    </button>
-
-                    <button 
-                      onClick={() => handleCopyText(mp.subject || campaign.globalSubject, mp.id, 'subject')}
-                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copySubjectId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
-                    >
-                      {copySubjectId === mp.id ? <CheckCircle className="w-4 h-4" /> : <Type className="w-4 h-4" />}
-                      Subject
-                    </button>
-
-                    <button 
-                      onClick={() => handleCopyText(mp.body || campaign.globalBody, mp.id, 'body')}
-                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl text-[10px] font-bold transition-all border ${copyBodyId === mp.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-blue-200 hover:text-blue-600'}`}
-                    >
-                      {copyBodyId === mp.id ? <CheckCircle className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                      Body
-                    </button>
-                  </div>
-                </div>
+                {/* Primary Action Button (The "Send Email" footer) */}
+                <a 
+                  href={generateMailto(mp)}
+                  className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-3 font-black text-sm uppercase tracking-widest transition-colors active:scale-[0.98]"
+                >
+                  {isGroup ? 'Send Group Action' : 'Send Individual Action'} <ExternalLink className="w-4 h-4" />
+                </a>
               </div>
-
-              {/* Primary Action Button (The "Send Email" footer) */}
-              <a 
-                href={generateMailto(mp)}
-                className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-3 font-black text-sm uppercase tracking-widest transition-colors active:scale-[0.98]"
-              >
-                Send Email Action <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
-          ))}
+            );
+          })}
 
           {campaign.mps.length === 0 && (
             <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-gray-100">
@@ -284,7 +288,7 @@ With the Best regards`,
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Email Address (use ; for multiple)</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Email Addresses (separte with ; or ,)</label>
                       <input 
                         className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         value={mp.email}
