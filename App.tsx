@@ -52,7 +52,7 @@ We are calling for two immediate actions:
 Any government committed to human dignity, international law, and accountability must act to prevent further atrocities.
 With the Best regards`,
     mps: [
-      { id: 'ex-1', name: 'All Primary Targets', email: 'jimmie.akesson@riksdagen.se;roberta.metsola@europarl.europa.eu;ulf.kristersson@gov.se;cab-von-der-leyen-contact@ec.europa.eu;magdalena.andersson@riksdagen.se;roberta.metsola@europarl.europa.eu;michael.gahler@europarl.europa.eu;charlie.weimers@europarl.europa.eu;raphael.glucksmann@europarl.europa.eu;hannah.neumann@europarl.europa.eu;petras.austrevicius@europarl.europa.eu' }
+      { id: 'ex-1', name: 'All Primary Targets', email: 'roberta.metsola@europarl.europa.eu;michael.gahler@europarl.europa.eu;charlie.weimers@europarl.europa.eu;raphael.glucksmann@europarl.europa.eu;hannah.neumann@europarl.europa.eu;petras.austrevicius@europarl.europa.eu' }
       // ,
       //{ id: 'ex-2', name: 'Ulf Kristersson', email: 'ulf.kristersson@gov.se' },
       //{ id: 'ex-3', name: 'Ursula von der Leyen', email: 'cab-von-der-leyen-contact@ec.europa.eu' },
