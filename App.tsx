@@ -52,16 +52,17 @@ We are calling for two immediate actions:
 Any government committed to human dignity, international law, and accountability must act to prevent further atrocities.
 With the Best regards`,
     mps: [
-      { id: 'ex-1', name: 'All Primary Targets', email: 'jimmie.akesson@riksdagen.se;roberta.metsola@europarl.europa.eu;ulf.kristersson@gov.se;cab-von-der-leyen-contact@ec.europa.eu;magdalena.andersson@riksdagen.se;roberta.metsola@europarl.europa.eu;michael.gahler@europarl.europa.eu;charlie.weimers@europarl.europa.eu;raphael.glucksmann@europarl.europa.eu;hannah.neumann@europarl.europa.eu;petras.austrevicius@europarl.europa.eu' },
-      { id: 'ex-2', name: 'Ulf Kristersson', email: 'ulf.kristersson@gov.se' },
-      { id: 'ex-3', name: 'Ursula von der Leyen', email: 'cab-von-der-leyen-contact@ec.europa.eu' },
-      { id: 'ex-4', name: 'Magdalena Andersson', email: 'magdalena.andersson@riksdagen.se' },
-      { id: 'ex-5', name: 'Roberta Metsola', email: 'roberta.metsola@europarl.europa.eu' },
-      { id: 'ex-6', name: 'Michael Gahler', email: 'michael.gahler@europarl.europa.eu' },
-      { id: 'ex-7', name: 'Charlie Weimers', email: 'charlie.weimers@europarl.europa.eu' },
-      { id: 'ex-8', name: 'Raphaël Glucksmann', email: 'raphael.glucksmann@europarl.europa.eu' },
-      { id: 'ex-9', name: 'Hannah Neumann', email: 'hannah.neumann@europarl.europa.eu' },
-      { id: 'ex-10', name: 'Petras Auštrevičius', email: 'petras.austrevicius@europarl.europa.eu' }
+      { id: 'ex-1', name: 'All Primary Targets', email: 'jimmie.akesson@riksdagen.se;roberta.metsola@europarl.europa.eu;ulf.kristersson@gov.se;cab-von-der-leyen-contact@ec.europa.eu;magdalena.andersson@riksdagen.se;roberta.metsola@europarl.europa.eu;michael.gahler@europarl.europa.eu;charlie.weimers@europarl.europa.eu;raphael.glucksmann@europarl.europa.eu;hannah.neumann@europarl.europa.eu;petras.austrevicius@europarl.europa.eu' }
+      // ,
+      //{ id: 'ex-2', name: 'Ulf Kristersson', email: 'ulf.kristersson@gov.se' },
+      //{ id: 'ex-3', name: 'Ursula von der Leyen', email: 'cab-von-der-leyen-contact@ec.europa.eu' },
+      //{ id: 'ex-4', name: 'Magdalena Andersson', email: 'magdalena.andersson@riksdagen.se' },
+      //{ id: 'ex-5', name: 'Roberta Metsola', email: 'roberta.metsola@europarl.europa.eu' },
+      //{ id: 'ex-6', name: 'Michael Gahler', email: 'michael.gahler@europarl.europa.eu' },
+      //{ id: 'ex-7', name: 'Charlie Weimers', email: 'charlie.weimers@europarl.europa.eu' },
+      //{ id: 'ex-8', name: 'Raphaël Glucksmann', email: 'raphael.glucksmann@europarl.europa.eu' },
+      //{ id: 'ex-9', name: 'Hannah Neumann', email: 'hannah.neumann@europarl.europa.eu' },
+      //{ id: 'ex-10', name: 'Petras Auštrevičius', email: 'petras.austrevicius@europarl.europa.eu' }
     ]
   });
 
