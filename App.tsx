@@ -34,22 +34,23 @@ const App: React.FC = () => {
   const [campaign, setCampaign] = useState<CampaignData>({
     title: 'Campaign For a Free Iran',
     globalSubject: 'Urgent Appeal Under Responsibility to Protect (R2P): Iran',
-    globalBody: `Hi,
+    globalBody: `Hi dear Member of the European Parliament!
 
-The Islamic Republic of Iran is committing systematic war crimes and crimes against humanity against its own unarmed and peaceful protesters who are demanding the most basic human rights.
+The Islamic Republic of Iran is carrying out systematic crimes against humanity against unarmed civilians protesting peacefully for basic human rights. Protesters, including children, are being killed in the streets, deliberately targeted with military-grade and chemical weapons, and in some cases executed at close range. Victims’ bodies are confiscated to conceal evidence.
 
-The IRGC has deliberately targeted civilians with military-grade and chemical weapons. Injured protesters have been executed at close range — including inside hospitals — and victims’ bodies have been confiscated and stolen to conceal evidence. These are not isolated incidents but an organized policy of repression.
+The regime has also deployed foreign terrorist militias, including Hashd al-Shaabi, Zeynabiyoun, and Fatemiyoun forces, to suppress its own population—an explicit violation of international law and the Geneva Conventions.
 
-In addition, the regime has imported foreign terrorist militias, including Hashd al-Shaabi, Zeynabiyoun, and Fatemiyoun forces, to Iran to suppress civilians. The use of foreign proxy militias against a domestic population is a clear violation of international law and the Geneva Conventions.
+Iran has completely failed to protect its people and is actively committing mass atrocities. This clearly meets the legal threshold for the Responsibility to Protect (R2P).
 
-Iran has manifestly failed to protect its population and is actively perpetrating atrocities. Under international law, this meets the threshold for the Responsibility to Protect (R2P).
-
-We are calling for two immediate actions:
+We therefore call for the following immediate actions:
  1. The IRGC must be designated as a terrorist organization by the European Union.
  2. The Responsibility to Protect (R2P) must be activated for Iran.
+ 3. Prince Reza Pahlavi should be formally recognized as the leader of the democratic transition and invited to the European Parliament.
+ 4. Abr Arvan/ArvanCloud, a company actively assisting the regime’s repression, must be designated as a terrorist entity.
 
-Any government committed to human dignity, international law, and accountability must act to prevent further atrocities.
-With the Best regards`,
+Governments committed to human dignity, international law, and accountability must act now to prevent further atrocities.
+
+With best regards`,
     mps: [
       { id: 'ex-1', name: 'All Primary Targets', email: 'roberta.metsola@europarl.europa.eu;michael.gahler@europarl.europa.eu;charlie.weimers@europarl.europa.eu;raphael.glucksmann@europarl.europa.eu;hannah.neumann@europarl.europa.eu;petras.austrevicius@europarl.europa.eu' }
     ]
